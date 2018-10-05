@@ -20,6 +20,7 @@ import torch
 from torch.autograd import Variable
 import torch.nn as nn
 import torch.optim as optim
+import scipy.io as sio
 
 import torchvision.transforms as transforms
 import torchvision.datasets as dset
@@ -139,6 +140,8 @@ def _get_image_blob(im):
 
 if __name__ == '__main__':
 
+
+
   args = parse_args()
 
   print('Called with args:')
@@ -158,7 +161,8 @@ if __name__ == '__main__':
   # train set
   # -- Note: Use validation set and disable the flipped to enable faster loading.
 
-  input_dir = args.load_dir + "/" + args.net + "/" + args.dataset
+  # input_dir = args.load_dir + "/" + args.net + "/" + args.dataset
+  input_dir = args.load_dir 
   if not os.path.exists(input_dir):
     raise Exception('There is no input directory for loading network from ' + input_dir)
   load_name = os.path.join(input_dir,
@@ -245,6 +249,9 @@ if __name__ == '__main__':
 
   print('Loaded Photo: {} images.'.format(num_images))
 
+  # dict save to mat file
+  objects = dict()
+  my_bounding_box = [0] * num_images
 
   while (num_images >= 0):
       total_tic = time.time()
@@ -331,6 +338,7 @@ if __name__ == '__main__':
       misc_tic = time.time()
       if vis:
           im2show = np.copy(im)
+      
       for j in xrange(1, len(pascal_classes)):
           inds = torch.nonzero(scores[:,j]>thresh).view(-1)
           # if there is det
@@ -347,8 +355,17 @@ if __name__ == '__main__':
             cls_dets = cls_dets[order]
             keep = nms(cls_dets, cfg.TEST.NMS, force_cpu=not cfg.USE_GPU_NMS)
             cls_dets = cls_dets[keep.view(-1).long()]
+
             if vis:
-              im2show = vis_detections(im2show, pascal_classes[j], cls_dets.cpu().numpy(), 0.5)
+           
+              if pascal_classes[j] == 'person':
+                  # if you want to change the name rule of images, please change here
+                  image_index = (int(imglist[num_images][0:-4]) - 1)
+                  my_bounding_box[image_index] = cls_dets.cpu().numpy()
+                  im2show = vis_detections(im2show, pascal_classes[j], cls_dets.cpu().numpy(), 0.5)
+                 
+
+          
 
       misc_toc = time.time()
       nms_time = misc_toc - misc_tic
@@ -359,8 +376,6 @@ if __name__ == '__main__':
           sys.stdout.flush()
 
       if vis and webcam_num == -1:
-          # cv2.imshow('test', im2show)
-          # cv2.waitKey(0)
           result_path = os.path.join(args.image_dir, imglist[num_images][:-4] + "_det.jpg")
           cv2.imwrite(result_path, im2show)
       else:
@@ -375,3 +390,5 @@ if __name__ == '__main__':
   if webcam_num >= 0:
       cap.release()
       cv2.destroyAllWindows()
+  objects['bounding_box'] = my_bounding_box
+  sio.savemat('bounding_box.mat', mdict=objects)
