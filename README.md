@@ -1,34 +1,35 @@
-# Faster RCNN PyTorch Implementation forked from jwyang/faster-rcnn.pytorch
+# Faster RCNN PyTorch Implementation
 
-We use it to detect players in sports video. 
+This is an adaption of Faster-RCNN to player detection in sports videos. 
 
-Run with Python 3.6, Pytorch 0.4.0.
+## How to use
+- Run with Python 3.6 (3.7 also works).
+- Pytorch 0.4.0 (0.4.1 also works, if using 0.4.1, please run `pip install torch==0.4.1.post2`).
 
-1. Put your network model (.pth file, which can be download from forked repository's link in README) in the models folder. 
-2. Put images to be detected in images folder. 
-Note: The name of images should be 1.jpg, 2.jpg, ..., 100.jpg, ... etc. And result images are named as 1_det.jpg, 2_det.jpg...  
-The mat file for bounding box is in the same path as demo.py with name of bounding_box.mat. It is a mat file with N(number of images) cells, each cell is M * 5. M is the number of bounding boxes in "person" category, and 5 is (left_up_x, left_up_y, right_down_x, right_down_y, confidence_percentage).
-If you want to change the name rule, please see the place with comment:
-```
- # if you want to change the name rule of images, please change here
-```
+1. Clone this repo.
+2. Run `cd lib` and `sh make.sh` to build. Please remember to change the CUDA_PATH in make.sh. You may also set C_INCLUDE_PATH as CUDA_PATH/include. 
+3. Put network model (.pth file, which can be download from forked repository's link in README) in the models folder. 
+4. Put images to be detected in images folder. 
+*Note: The name of images should be 1.jpg, 2.jpg, ..., 100.jpg, ... etc. And result images are named as 1_det.jpg, 2_det.jpg...  
+The mat file for bounding box is in the same path as demo.py with name of bounding_box.mat. It is a mat file with N(number of images) cells, each cell is M * 5. M is the number of bounding boxes in "person" category, and 5 is (left_up_x, left_up_y, right_down_x, right_down_y, confidence_percentage).*
+
+If you want to change the image name rule, please see the place with comment: 
+`# if you want to change the name rule of images, please change here` 
 and change the split method of file name. 
 
-3. Run demo.py in the repository folder with:
+5. Run demo.py in the repository folder with:
 ```
 python demo.py --net $NET_TYPE --checksession $SESSION_NUM --checkepoch $EPOCH_NUM --checkpoint $CHECK_POINT --cuda --load_dir $MODEL_PATH
 ```
 
-for example, put a faster_rcnn_1_6_10021.pth under models folder in Luke's machine, run like this:
+For example, put a faster_rcnn_1_6_10021.pth under models folder in Luke's machine, run like this:
 ```
-python demo.py --net vgg16m --checksession 1 --checkepoch 6 --checkpoint 10021 --cuda --load_dir /hdd/luke/fasterrcnn/Faster-RCNN-PyTorch/models/
+python demo.py --net vgg16 --checksession 1 --checkepoch 6 --checkpoint 10021 --cuda --load_dir /hdd/luke/fasterrcnn/Faster-RCNN-PyTorch/models/
 
 ```
 
 
-
-
-# README from previous repository is copied below!
+# README copied from forked repo
 
 ## Introduction
 
