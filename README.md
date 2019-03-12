@@ -11,8 +11,7 @@ This is an adaption of Faster-RCNN to player detection in sports videos.
 3. Put network model (.pth file, which can be download from forked repository's link in README) in the models folder. 
 4. Put images to be detected in images folder.  
 *Note: The name of images should be 1.jpg, 2.jpg, ..., 100.jpg, ... etc. And result images are named as 1_det.jpg, 2_det.jpg...  
-The mat file for bounding box is in the same path as demo.py with name of bounding_box.mat. It is a mat file with N(number of images) cells, each cell is M * 5. M is the number of bounding boxes in "person" category, and 5 is (left_up_x, left_up_y, right_down_x, right_down_y, confidence_percentage).*
-
+The mat file for bounding box is in the same path as demo.py with name of bounding_box.mat. It is a mat file with N(number of images) cells, each cell is M * 5. M is the number of bounding boxes in "person" category, and 5 is (left_up_x, left_up_y, right_down_x, right_down_y, confidence_percentage).*  
 If you want to change the image name rule, please see the place with comment:  
 `# if you want to change the name rule of images, please change here`  
 and change the split method of file name. 
